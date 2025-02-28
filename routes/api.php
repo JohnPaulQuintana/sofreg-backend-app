@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\EmployeeAttendance;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Employee\EmployeeController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 
 
@@ -22,7 +22,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     // Admin Routes
     Route::prefix('admin')->group(function () {
-        // Route::get('/dashboard', [AdminController::class, 'dashboard']);
+        Route::post('/employee-account', [AccountController::class, 'addEmployeeAccount']);
+        Route::get('/employee-account', [AccountController::class, 'getAllEmployeeAccount']);
+        Route::get('/employee-attendance', [EmployeeAttendance::class, 'employeeAttendancePerMonth']);
+        Route::get('/export-attendance', [EmployeeAttendance::class, 'exportAttendance']);
     });
 
     // Employee Routes
@@ -36,7 +39,11 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+
+
 
 Route::get('/storage/{path}', function ($path) {
     $file = storage_path('app/public/' . $path);
