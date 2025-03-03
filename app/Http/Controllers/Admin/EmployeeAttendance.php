@@ -32,8 +32,15 @@ class EmployeeAttendance extends Controller
                 return $record;
             });
 
+            $attendance_today = Attendance::with('user')
+                ->select('attendances.*')
+                ->join(\DB::raw('(SELECT MAX(id) as latest_id FROM attendances GROUP BY employee_id) as latest'), 'attendances.id', '=', 'latest.latest_id')
+                ->whereDate('attendances.created_at', now()->toDateString()) // Filter for today only
+                ->orderBy('attendances.created_at', 'desc')
+                ->paginate(10);
+        
 
-        return response()->json(['employee_attendance'=>$attendance]);
+        return response()->json(['employee_attendance'=>$attendance, 'employee_attendance_today'=>$attendance_today]);
     }
     /**
      * Get all users with role 'employee' and their attendance records
@@ -55,4 +62,29 @@ class EmployeeAttendance extends Controller
         return response()->json(['employee_attendance'=>$attendance]);
     }
 
+    public function getAttendanceSummary()
+    {
+        $totalEmployees = Attendance::distinct('employee_id')->count('employee_id');
+
+        $absentEmployees = Attendance::whereDate('date', today())
+            ->distinct('employee_id')
+            ->count('employee_id');
+
+        $mostLateEmployee = Attendance::where('status', 'Late')
+            ->selectRaw('employee_id, COUNT(*) as late_count')
+            ->groupBy('employee_id')
+            ->orderByDesc('late_count')
+            ->first();
+
+        $noAbsentRecord = Attendance::where('status', '!=', 'Absent')
+            ->distinct('employee_id')
+            ->count('employee_id');
+
+        return response()->json([
+            'total_employees' => $totalEmployees,
+            'absent_employees' => $absentEmployees,
+            'most_late_employee' => $mostLateEmployee ? $mostLateEmployee->employee_id : null,
+            'no_absent_record' => $noAbsentRecord
+        ]);
+    }
 }

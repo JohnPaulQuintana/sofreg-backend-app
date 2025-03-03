@@ -26,6 +26,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/employee-account', [AccountController::class, 'getAllEmployeeAccount']);
         Route::get('/employee-attendance', [EmployeeAttendance::class, 'employeeAttendancePerMonth']);
         Route::get('/export-attendance', [EmployeeAttendance::class, 'exportAttendance']);
+
+        // edit employee
+        Route::post('/edit-employee',[AccountController::class, 'editEmployee']);
+        Route::post('/update-employee',[AccountController::class, 'updateEmployee']);
+        // delete employee
+        Route::post('/delete-employee',[AccountController::class, 'deleteEmployee']);
+        //view attendance per employee
+        Route::get('view-attendance',[AccountController::class, 'viewEmployeeAttendance']);
+        //dashboard summary
+        Route::get('summary',[EmployeeAttendance::class, 'getAttendanceSummary']);
     });
 
     // Employee Routes
