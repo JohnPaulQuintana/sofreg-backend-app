@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
+    public function test()
+    {
+        return response()->json(["status"=>200, "message"=>"API is working now."]);
+    }
     public function register(Request $request)
     {
         $request->validate([
