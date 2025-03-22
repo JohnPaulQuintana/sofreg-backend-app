@@ -18,7 +18,7 @@ use App\Http\Controllers\Employee\EmployeeController;
 |
 */
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/api-test',[AuthController::class, 'test']);
+Route::get('/api-test',[AuthController::class, 'test']);
 Route::middleware('auth:sanctum')->group(function () {
     // Admin Routes
     Route::prefix('admin')->group(function () {
