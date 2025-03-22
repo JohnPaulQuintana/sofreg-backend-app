@@ -29,7 +29,8 @@ class User extends Authenticatable
         'department',
         'position',
         'time_of_duty_start',
-        'time_of_duty_end'
+        'time_of_duty_end',
+        'password_changed'
     ];
 
     /**

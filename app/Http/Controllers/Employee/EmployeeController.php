@@ -38,7 +38,7 @@ class EmployeeController extends Controller
         ]);
 
         event(new AttendanceUpdated($attendance));
-        
+
         return response()->json(['message' => 'Attendance created successfully', 'attendance' => $attendance]);
     }
     // Clock out
@@ -72,13 +72,24 @@ class EmployeeController extends Controller
 
     public function getAttendanceByWeek(){
         // use Carbon\Carbon;
-        
+
         // return a list of attendance records for the current week
         $attendance = Attendance::where('employee_id', auth()->user()->employee_id)
             ->whereDate('date', '>=', Carbon::now()->startOfWeek()->format('Y-m-d'))
             ->whereDate('date', '<=', Carbon::now()->endOfWeek()->format('Y-m-d'))
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+
+        return response()->json(['attendance' => $attendance]);
+    }
+    public function getAttendanceByAll(){
+        // use Carbon\Carbon;
+
+        // Get all attendance records for the authenticated user (latest first)
+        $attendance = Attendance::where('employee_id', auth()->user()->employee_id)
+        ->orderBy('date', 'desc') // Sort by attendance date (latest first)
+        ->orderBy('created_at', 'desc') // If same date, sort by creation time
+        ->paginate(10); // Paginate results
 
         return response()->json(['attendance' => $attendance]);
     }

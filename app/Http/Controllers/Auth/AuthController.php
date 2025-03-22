@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -63,5 +64,35 @@ class AuthController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        Log::info('Received request:', $request->all()); // Log request data
+
+        // ✅ Validate request data
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'new_password' => 'required|string|min:6',
+        ]);
+
+        // ✅ Find user
+        $user = User::find($validatedData['user_id']);
+        if (!$user) {
+            Log::error('User not found:', ['user_id' => $validatedData['user_id']]);
+            return response()->json(['success' => false, 'message' => 'User not found'], 404);
+        }
+
+        // ✅ Update password
+        $user->password = Hash::make($validatedData['new_password']);
+        $user->password_changed = true;
+        $user->save();
+
+        Log::info('Password updated successfully:', ['user_id' => $user->id]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password updated successfully'
+        ]);
     }
 }

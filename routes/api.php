@@ -43,9 +43,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/clockin', [EmployeeController::class, 'clockInAttendance']);
         Route::post('/clockout', [EmployeeController::class, 'clockOutAttendance']);
         Route::get('/attendance-by-week', [EmployeeController::class, 'getAttendanceByWeek']);
+        Route::get('/attendance-by-all', [EmployeeController::class, 'getAttendanceByAll']);
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/update-password', [AuthController::class, 'updatePassword']);
 });
 
 
