@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\EmployeeAttendance;
+use App\Http\Controllers\Admin\JobPostingController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Employee\EmployeeController;
 
@@ -18,6 +19,7 @@ use App\Http\Controllers\Employee\EmployeeController;
 |
 */
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/career/jobs',[JobPostingController::class, 'career']);
 Route::get('/api-test',[AuthController::class, 'test']);
 Route::middleware('auth:sanctum')->group(function () {
     // Admin Routes
@@ -36,6 +38,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('view-attendance',[AccountController::class, 'viewEmployeeAttendance']);
         //dashboard summary
         Route::get('summary',[EmployeeAttendance::class, 'getAttendanceSummary']);
+
+        //create job
+        Route::post('/jobs',[JobPostingController::class, 'job']);
+        Route::get('/jobs',[JobPostingController::class, 'index']);
+        Route::post('/jobs/{id}',[JobPostingController::class, 'update']);
+        Route::delete('/jobs/{id}',[JobPostingController::class, 'delete']);
     });
 
     // Employee Routes
