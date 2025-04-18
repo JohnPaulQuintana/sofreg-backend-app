@@ -99,10 +99,12 @@ class EmployeeAttendance extends Controller
         //     ->count('employee_id');
 
         $mostLateEmployee = Attendance::where('status', 'Late')
-            ->selectRaw('employee_id, COUNT(*) as late_count')
-            ->groupBy('employee_id')
-            ->orderByDesc('late_count')
-            ->first();
+        ->whereMonth('date', Carbon::now()->month)
+        ->whereYear('date', Carbon::now()->year)
+        ->selectRaw('employee_id, COUNT(*) as late_count')
+        ->groupBy('employee_id')
+        ->orderByDesc('late_count')
+        ->first();
 
         $noAbsentRecord = Attendance::where('status', '!=', 'Absent')
             ->distinct('employee_id')

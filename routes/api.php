@@ -44,6 +44,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/jobs',[JobPostingController::class, 'index']);
         Route::post('/jobs/{id}',[JobPostingController::class, 'update']);
         Route::delete('/jobs/{id}',[JobPostingController::class, 'delete']);
+
+        //reset password
+        Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     });
 
     // Employee Routes
@@ -56,6 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/update-password', [AuthController::class, 'updatePassword']);
+
 });
 
 
