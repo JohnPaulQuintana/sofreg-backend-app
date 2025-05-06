@@ -67,7 +67,6 @@ class EmployeeAttendance extends Controller
     {
         $totalEmployees = Attendance::distinct('employee_id')->count('employee_id');
 
-
         // Explanation
         // Get all employees (User::where('role', 'employee')) with employee_id and time_of_duty_start.
         // → Ensures we only check employees whose shift has already started, preventing false absences.
